@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense & Budget Visualizer</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Personal finance tracker</p>
+          <h1>Expense & Budget Visualizer</h1>
+          <p class="subtitle">Keep your spending in view and stay on budget.</p>
+        </div>
+        <button id="themeToggle" class="icon-btn" type="button" aria-label="Toggle dark mode">
+          🌙
+        </button>
+      </header>
+
+      <main class="app-grid">
+        <section class="panel form-panel">
+          <h2>Add an expense</h2>
+          <form id="expenseForm" class="expense-form">
+            <label>
+              Budget goal
+              <input id="budgetInput" type="number" min="0" step="0.01" placeholder="2000" />
+            </label>
+            <label>
+              Expense name
+              <input id="nameInput" type="text" placeholder="Coffee break" required />
+            </label>
+            <label>
+              Amount
+              <input id="amountInput" type="number" min="0" step="0.01" placeholder="12.50" required />
+            </label>
+            <label>
+              Date
+              <input id="dateInput" type="date" required />
+            </label>
+            <label>
+              Category
+              <select id="categorySelect"></select>
+            </label>
+            <label>
+              New category
+              <input id="customCategoryInput" type="text" placeholder="Travel" />
+            </label>
+            <button type="submit">Add expense</button>
+          </form>
+          <button id="clearAllBtn" class="ghost-btn" type="button">Reset all data</button>
+        </section>
+
+        <section class="panel summary-panel">
+          <h2>Overview</h2>
+          <div class="stats-grid">
+            <article class="stat-card">
+              <span>Budget goal</span>
+              <strong id="budgetValue">$0.00</strong>
+            </article>
+            <article class="stat-card">
+              <span>Total spent</span>
+              <strong id="totalSpentValue">$0.00</strong>
+            </article>
+            <article class="stat-card">
+              <span>Remaining</span>
+              <strong id="remainingValue">$0.00</strong>
+            </article>
+            <article class="stat-card">
+              <span>This month</span>
+              <strong id="monthlyValue">$0.00</strong>
+            </article>
+          </div>
+
+          <div class="progress-card">
+            <div class="progress-labels">
+              <span>Budget usage</span>
+              <span id="usageText">0%</span>
+            </div>
+            <div class="progress-track">
+              <div id="progressFill" class="progress-fill"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel list-panel">
+          <div class="section-head">
+            <h2>Recent expenses</h2>
+            <span id="expenseCount" class="pill">0 items</span>
+          </div>
+          <ul id="expenseList" class="expense-list"></ul>
+        </section>
+
+        <section class="panel monthly-panel">
+          <div class="section-head">
+            <h2>Monthly summary</h2>
+            <label class="month-picker">
+              Month
+              <select id="monthSelect"></select>
+            </label>
+          </div>
+          <div id="monthlySummary" class="monthly-summary"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
