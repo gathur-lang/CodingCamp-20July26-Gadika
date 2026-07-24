@@ -3,17 +3,22 @@ const STORAGE_KEYS = {
   categories: 'expense-budget-categories',
   budget: 'expense-budget-budget',
   theme: 'expense-budget-theme',
+  currency: 'expense-budget-currency',
 };
 
 const defaultCategories = ['Food', 'Transport', 'Bills', 'Entertainment', 'Health', 'Shopping', 'Other'];
+const defaultCurrency = 'USD';
 
 let expenses = [];
 let categories = [];
 let budgetGoal = 0;
 let selectedMonth = '';
+let currentCurrency = defaultCurrency;
 
+const timeDisplay = document.getElementById('timeDisplay');
 const form = document.getElementById('expenseForm');
 const budgetInput = document.getElementById('budgetInput');
+const currencySelect = document.getElementById('currencySelect');
 const nameInput = document.getElementById('nameInput');
 const amountInput = document.getElementById('amountInput');
 const dateInput = document.getElementById('dateInput');
@@ -34,6 +39,30 @@ const clearAllBtn = document.getElementById('clearAllBtn');
 
 document.addEventListener('DOMContentLoaded', init);
 
+let timeInterval = setInterval(updateTimeDisplay, 1000);
+
+function formatTime(value) {
+  return String(value).padStart(2, '0');
+}
+
+function updateTimeDisplay() {
+  const now = new Date();
+  const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const dateString = now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+    timeDisplay.textContent = `${timeString} • ${dateString}`;
+  if (now.getHours() < 12) {
+    timeDisplay.textContent = '🌤️' + `${timeString} • ${dateString}`;
+  } else if (now.getHours() < 17) {
+    timeDisplay.textContent = '☀️' + `${timeString} • ${dateString}`;
+  } else if (now.getHours() < 20) {
+    timeDisplay.textContent = '🌥️' + `${timeString} • ${dateString}`;
+  } else {
+    timeDisplay.textContent = '🌙' + `${timeString} • ${dateString}`;
+  }
+
+  const hour = now.getHours();
+}
+
 function init() {
   loadData();
   setDefaultDate();
@@ -46,6 +75,7 @@ function init() {
 function bindEvents() {
   form.addEventListener('submit', handleAddExpense);
   budgetInput.addEventListener('change', handleBudgetChange);
+  currencySelect.addEventListener('change', handleCurrencyChange);
   clearAllBtn.addEventListener('click', resetAllData);
   monthSelect.addEventListener('change', (event) => {
     selectedMonth = event.target.value;
@@ -59,10 +89,12 @@ function loadData() {
   const savedCategories = JSON.parse(localStorage.getItem(STORAGE_KEYS.categories) || 'null');
   const savedBudget = Number(localStorage.getItem(STORAGE_KEYS.budget) || '0');
   const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
+  const savedCurrency = localStorage.getItem(STORAGE_KEYS.currency);
 
   expenses = Array.isArray(savedExpenses) ? savedExpenses : [];
   categories = Array.isArray(savedCategories) && savedCategories.length ? savedCategories : [...defaultCategories];
   budgetGoal = Number.isFinite(savedBudget) ? savedBudget : 0;
+  currentCurrency = savedCurrency || defaultCurrency;
 
   if (savedTheme === 'dark') {
     document.body.classList.add('dark');
@@ -73,6 +105,7 @@ function loadData() {
   }
 
   budgetInput.value = budgetGoal > 0 ? budgetGoal : '';
+  currencySelect.value = currentCurrency;
 }
 
 function setDefaultDate() {
@@ -88,6 +121,13 @@ function saveData() {
   localStorage.setItem(STORAGE_KEYS.expenses, JSON.stringify(expenses));
   localStorage.setItem(STORAGE_KEYS.categories, JSON.stringify(categories));
   localStorage.setItem(STORAGE_KEYS.budget, String(budgetGoal));
+  localStorage.setItem(STORAGE_KEYS.currency, currentCurrency);
+}
+
+function handleCurrencyChange(event) {
+  currentCurrency = event.target.value;
+  localStorage.setItem(STORAGE_KEYS.currency, currentCurrency);
+  render();
 }
 
 function populateCategoryOptions() {
@@ -178,10 +218,13 @@ function resetAllData() {
   expenses = [];
   categories = [...defaultCategories];
   budgetGoal = 0;
+  currentCurrency = defaultCurrency;
   localStorage.removeItem(STORAGE_KEYS.expenses);
   localStorage.removeItem(STORAGE_KEYS.categories);
   localStorage.removeItem(STORAGE_KEYS.budget);
+  localStorage.removeItem(STORAGE_KEYS.currency);
   budgetInput.value = '';
+  currencySelect.value = currentCurrency;
   populateCategoryOptions();
   populateMonthOptions();
   render();
@@ -286,10 +329,17 @@ function toggleTheme() {
 }
 
 function formatCurrency(value) {
-  return new Intl.NumberFormat('en-US', {
+  const options = {
     style: 'currency',
-    currency: 'USD',
-  }).format(value);
+    currency: currentCurrency,
+  };
+
+  if (currentCurrency === 'IDR') {
+    options.minimumFractionDigits = 0;
+    options.maximumFractionDigits = 0;
+  }
+
+  return new Intl.NumberFormat('en-US', options).format(value);
 }
 
 function formatDate(value) {

@@ -13,6 +13,7 @@
           <p class="eyebrow">Personal finance tracker</p>
           <h1>Expense & Budget Visualizer</h1>
           <p class="subtitle">Keep your spending in view and stay on budget.</p>
+          <p class="meta" id="timeDisplay">Loading Current Time...</p>
         </div>
         <button id="themeToggle" class="icon-btn" type="button" aria-label="Toggle dark mode">
           🌙
@@ -25,6 +26,13 @@
             <label>
               Budget goal
               <input id="budgetInput" type="number" min="0" step="0.01" placeholder="2000" />
+            </label>
+            <label>
+              Currency
+              <select id="currencySelect">
+                <option value="USD">USD</option>
+                <option value="IDR">IDR</option>
+              </select>
             </label>
         </section>
         

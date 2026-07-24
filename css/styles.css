@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  --bg: #f5f7fb;
+  --bg: #fffef8;
   --panel: #ffffff;
   --text: #172033;
   --muted: #6b7280;
@@ -14,10 +14,10 @@
 
 body.dark {
   color-scheme: dark;
-  --bg: #0f172a;
+  --bg: #2c3954;
   --panel: #111827;
   --text: #f8fafc;
-  --muted: #9ca3af;
+  --muted: #bdc1c7;
   --accent: #60a5fa;
   --accent-soft: rgba(96, 165, 250, 0.16);
   --border: #273449;
@@ -65,7 +65,7 @@ body {
 h1,
 h2,
 p {
-  margin: 0;
+  margin: 0 0 0.5rem;
 }
 
 .subtitle {
@@ -77,8 +77,8 @@ p {
 .ghost-btn,
 .expense-form button {
   border: 0;
-  border-radius: 999px;
-  padding: 10px 14px;
+  border-radius: 99px;
+  padding: 10px 16px;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease, background 0.2s ease;
@@ -268,7 +268,7 @@ select {
 
 .amount-pill {
   padding: 6px 10px;
-  border-radius: 999px;
+  border-radius: 9px;
   background: var(--accent-soft);
   font-weight: 700;
 }
